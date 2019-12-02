@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: registry
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: 8761
+      protocol: TCP
+      targetPort: 8761
+  selector:
+    app: eureka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: eureka0
+spec:
+  ports:
+    - port: 8761
+      protocol: TCP
+      targetPort: 8761
+  selector:
+    statefulset.kubernetes.io/pod-name: registry-0
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: eureka
+  name: registry
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eureka
+  serviceName: registry
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+        - env:
+            - name: PODNAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: EUREKA_DATACENTER
+              value: 朝阳门
+            - name: EUREKA_ENVIRONMENT
+              value: 生产1区
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: '*'
+            - name: LANG
+              value: en_US.UTF-8
+            - name: SERVER_PORT
+              value: '8761'
+            - name: EUREKA_INSTANCE_HOSTNAME
+              value: '${PODNAME}.registry'
+            - name: EUREKA_SERVER
+              value: >-
+                http://registry-0.registry:8761/eureka,http://registry-1.registry:8761/eureka,http://registry-2.registry:8761/eureka
+          image: 'docker-registry.default.svc:5000/test1/eureka'
+          imagePullPolicy: Always
+          name: eureka
+          ports:
+            - containerPort: 8761
+              name: http
+              protocol: TCP
