@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+  labels:
+    build: eureka
+  name: eureka
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'eureka:latest'
+  source:
+    git:
+      uri: 'https://github.com/zhengbin78/eureka.git'
+    type: Git
+  strategy:
+    sourceStrategy:
+      env:
+        - name: MAVEN_MIRROR_URL
+          value: >-
+            https://mirrors.huaweicloud.com/repository/maven/
+      from:
+        kind: ImageStreamTag
+        name: 'java:8'
+        namespace: openshift
+    type: Source
