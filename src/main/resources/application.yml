@@ -20,5 +20,5 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
     hostname: ${EUREKA_INSTANCE_HOSTNAME}
-    instance-id: ${EUREKA_INSTANCE_HOSTNAME}:${server.port}@${random.long(1000,9999)}
+    instance-id: ${EUREKA_INSTANCE_HOSTNAME}:${server.port}
     
