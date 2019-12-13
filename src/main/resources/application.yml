@@ -15,7 +15,7 @@ eureka:
     # eureka client间隔多久去拉取服务注册信息 默认30s
     registry-fetch-interval-seconds: 5
     service-url:
-      default-zone: ${EUREKA_SERVER}
+      defaultZone: ${EUREKA_SERVER}
   instance:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
